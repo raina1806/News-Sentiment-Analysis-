@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered News Aggregator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Powered News Aggregator</h1>
+            <form method="POST">
+                <input type="text" name="search_query" placeholder="Search for news..." required>
+                <button type="submit">Search</button>
+
+                <!-- Category Filter -->
+                <select name="category_filter">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Sentiment Filter -->
+                <select name="sentiment_filter">
+                    <option value="All" {% if sentiment_filter == "All" %}selected{% endif %}>All Sentiments</option>
+                    <option value="Positive" {% if sentiment_filter == "Positive" %}selected{% endif %}>Positive</option>
+                    <option value="Negative" {% if sentiment_filter == "Negative" %}selected{% endif %}>Negative</option>
+                    <option value="Neutral" {% if sentiment_filter == "Neutral" %}selected{% endif %}>Neutral</option>
+                </select>
+            </form>
+        </header>
+
+        <section class="news-list">
+            {% if articles %}
+                {% for article in articles %}
+                    <div class="article-card">
+                        <div class="article-category">{{ article['category'] }}</div>
+                        <img src="{{ article['image'] }}" alt="Article Image" class="article-image">
+                        <h2><a href="{{ article['url'] }}" target="_blank">{{ article['title'] }}</a></h2>
+                        <p><strong>Sentiment:</strong> {{ article['sentiment'] }} (Polarity: {{ article['polarity'] }})</p>
+                        <p><strong>Summary:</strong> {{ article['description'] }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No articles found for your query. Please try a different search.</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>
